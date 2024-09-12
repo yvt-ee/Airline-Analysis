@@ -835,7 +835,7 @@ WHERE
 ````
 
 
-#### 12 SMS to certain group of customer
+#### 13 SMS to certain group of customer
 
 > In the whole year of 2019, the number of female passengers aged 28-35 who took flights more than four times (including four times) is estimated to be about 40,000
 
@@ -860,3 +860,71 @@ distinct r_tel
    and rownum<=40000
 
 ````
+
+#### 14 Freight data entry
+
+
+````sql
+
+ insert into stg.wb_freight_charter
+select distinct t1.flight_no,t1.flight_date,t1.flights_segment_name,192000/2 income,sysdate
+ from dw.da_flight t1
+ where t1.flag in(0,1)
+ and t1.flight_no in('9C6239','9C6240')
+ and t1.flight_date=to_date('2020-04-28','yyyy-mm-dd')
+ 
+ union all
+ 
+ select distinct t1.flight_no,t1.flight_date,t1.flights_segment_name,220000/2 income,sysdate
+ from dw.da_flight t1
+ where t1.flag in(0,1)
+ and t1.flight_no in('9C6173','9C6174')
+ and t1.flight_date=to_date('2020-04-28','yyyy-mm-dd')
+ 
+ union all
+ 
+
+select distinct t1.flight_no,t1.flight_date,t1.flights_segment_name,188000/2 income,sysdate
+ from dw.da_flight t1
+ where t1.flag in(0,1)
+ and t1.flight_no in('9C8999','9C9000')
+ and t1.flight_date=to_date('2020-04-28','yyyy-mm-dd')
+ 
+union all
+
+select distinct t1.flight_no,t1.flight_date,t1.flights_segment_name,188000/2,sysdate
+ from dw.da_flight t1
+ where t1.flag in(0,1)
+ and t1.flight_no in('9C8589','9C8590')
+and t1.flight_date=to_date('2020-04-28','yyyy-mm-dd')
+````
+
+#### 15 total flights in five years
+
+> total flights in five years
+
+1, in the past five years, the total number of passengers flying to Xinjiang each year, winter and spring and summer and autumn are separated. 
+2. In the past five years, the number of tourists we fly to Xinjiang every year has been separated from winter, spring and summer and autumn. 
+3, the above data need to enter and leave Xinjiang common data.
+
+ 
+select *
+ from dw.fact_order_detail t1
+ join dw.da_flight t2 on t1.segment_Head_id=t2.segment_Head_id
+ join dw.da_flight_season t3 on t2.flight_date>=t3.
+ where t1.flights_date>=to_date('2015-03-29','yyyy-mm-dd')
+    and t1.flights_date< to_date('2020-05-03','yyyy-mm-dd')
+  and t1.flag<>2
+  and regexp_like(t2.flights_segment_name,'(Urumqi)|(Karamay)|(Shache)')
+  
+
+
+
+
+
+
+
+
+
+
+
