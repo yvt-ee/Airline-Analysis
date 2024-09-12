@@ -1323,6 +1323,7 @@ WHERE
 
 #### 23 P2 channel(discount) sales data
 
+````sql
 select t1.order_day,
 case when t1.channel,count(1)   
   from dw.fact_order_detail t1
@@ -1337,3 +1338,4 @@ case when t1.channel,count(1)
    and t1.company_id=0
    group by t1.order_day,
 case when t1.channel
+````
