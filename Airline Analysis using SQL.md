@@ -117,7 +117,7 @@ GROUP BY
   from dw.fact_order_detail t1
   join dw.da_flight t2 on t1.segment_head_id = t2.segment_head_id
   left join dw.bi_order_region t5 on t1.flights_order_head_id=t5.flights_order_head_id
- where t1.flights_date >= to_date('2019-01-01', 'yyyy-mm-dd')
+ where t1.flights_date >= to_date('2020-01-01', 'yyyy-mm-dd')
    and t1.flights_date < to_date('2022-10-01', 'yyyy-mm-dd')
    and t1.whole_flight like '9C%'
    and t1.seats_name is not null
@@ -379,7 +379,7 @@ where h1.rid=1;
 
 #### 7 Refund during festival
 
->Background: Refund date data: 20200101~ now compared with 20190112~ The same date of the Spring Festival travel rush last year
+>Background: Refund date data: 20200101~ now compared with 20200112~ The same date of the Spring Festival travel rush last year
 
 ````sql
 
@@ -400,10 +400,10 @@ select 'sametimelastyear' type,t3.datetime,count(1)
 from dw.da_order_drawback t1
 join dw.da_flight t2 on t1.segment_head_id=t2.segment_head_id
 join (select * from dw.adt_chunyun_corredate 
-where chunyun_year = 2020 and corre_year = 2019)t3 on trunc(t1.money_date)=t3.corre_date
-where t1.money_date>=to_date('2021-01-12','yyyy-mm-dd')
+where chunyun_year = 2020 and corre_year = 2020)t3 on trunc(t1.money_date)=t3.corre_date
+where t1.money_date>=to_date('2022-01-12','yyyy-mm-dd')
   and t1.money_date< trunc(sysdate)
-  and t3.datetime>=to_date('2021-01-01','yyyy-mm-dd')
+  and t3.datetime>=to_date('2022-01-01','yyyy-mm-dd')
   and t3.datetime< trunc(sysdate)
   and t2.flag<>2
   and t1.seats_name is not null
@@ -599,10 +599,10 @@ union all
 
 SELECT 
     CASE 
-        WHEN t1.order_day >= TO_DATE('2019-02-15', 'yyyy-mm-dd') 
-             AND t1.order_day <= TO_DATE('2019-02-21', 'yyyy-mm-dd') THEN 'Last Year - Last Week'
-        WHEN t1.order_day >= TO_DATE('2019-02-22', 'yyyy-mm-dd') 
-             AND t1.order_day <= TO_DATE('2019-02-28', 'yyyy-mm-dd') THEN 'Last Year - This Week'
+        WHEN t1.order_day >= TO_DATE('2022-02-15', 'yyyy-mm-dd') 
+             AND t1.order_day <= TO_DATE('2022-02-21', 'yyyy-mm-dd') THEN 'Last Year - Last Week'
+        WHEN t1.order_day >= TO_DATE('2022-02-22', 'yyyy-mm-dd') 
+             AND t1.order_day <= TO_DATE('2022-02-28', 'yyyy-mm-dd') THEN 'Last Year - This Week'
     END AS Week_Type, 
     '02' || TO_CHAR(TO_NUMBER(TO_CHAR(t1.order_day, 'dd')) - 1) AS Date,
     CASE 
@@ -670,8 +670,8 @@ LEFT JOIN
 LEFT JOIN 
     dw.bi_order_region t5 ON t1.flights_order_head_id = t5.flights_order_head_id
 WHERE 
-    t1.order_day >= TO_DATE('2019-02-15', 'yyyy-mm-dd')
-    AND t1.order_day <= TO_DATE('2019-02-28', 'yyyy-mm-dd')
+    t1.order_day >= TO_DATE('2022-02-15', 'yyyy-mm-dd')
+    AND t1.order_day <= TO_DATE('2022-02-28', 'yyyy-mm-dd')
     AND t1.whole_flight LIKE '9C%'
     AND t1.flag_id IN (3, 5, 40, 41)
     AND t2.flag <> 2
@@ -680,10 +680,10 @@ WHERE
     AND t1.seats_name NOT IN ('B', 'G', 'G1', 'G2', 'O')
 GROUP BY 
     CASE 
-        WHEN t1.order_day >= TO_DATE('2019-02-15', 'yyyy-mm-dd') 
-             AND t1.order_day <= TO_DATE('2019-02-21', 'yyyy-mm-dd') THEN 'Last Year - Last Week'
-        WHEN t1.order_day >= TO_DATE('2019-02-22', 'yyyy-mm-dd') 
-             AND t1.order_day <= TO_DATE('2019-02-28', 'yyyy-mm-dd') THEN 'Last Year - This Week'
+        WHEN t1.order_day >= TO_DATE('2022-02-15', 'yyyy-mm-dd') 
+             AND t1.order_day <= TO_DATE('2022-02-21', 'yyyy-mm-dd') THEN 'Last Year - Last Week'
+        WHEN t1.order_day >= TO_DATE('2022-02-22', 'yyyy-mm-dd') 
+             AND t1.order_day <= TO_DATE('2022-02-28', 'yyyy-mm-dd') THEN 'Last Year - This Week'
     END,
     '02' || TO_CHAR(TO_NUMBER(TO_CHAR(t1.order_day, 'dd')) - 1),
     CASE 
@@ -837,7 +837,7 @@ WHERE
 
 #### 13 SMS to certain group of customer
 
-> In the whole year of 2019, the number of female passengers aged 28-35 who took flights more than four times (including four times) is estimated to be about 40,000
+> In the whole year of 2021, the number of female passengers aged 28-35 who took flights more than four times (including four times) is estimated to be about 40,000
 
 
 ````sql
@@ -901,30 +901,439 @@ and t1.flight_date=to_date('2020-04-28','yyyy-mm-dd')
 
 #### 15 total flights in five years
 
-> total flights in five years
-
-1, in the past five years, the total number of passengers flying to Xinjiang each year, winter and spring and summer and autumn are separated. 
-2. In the past five years, the number of tourists we fly to Xinjiang every year has been separated from winter, spring and summer and autumn. 
-3, the above data need to enter and leave Xinjiang common data.
+> 1. in the past five years, the total number of passengers flying to Xinjiang each year, winter and spring and summer and autumn are separated. 
+> 2. In the past five years, the number of tourists we fly to Xinjiang every year has been separated from winter, spring and summer and autumn. 
+> 3. the above data need to enter and leave Xinjiang common data.
 
 ````sql
 select *
  from dw.fact_order_detail t1
  join dw.da_flight t2 on t1.segment_Head_id=t2.segment_Head_id
  join dw.da_flight_season t3 on t2.flight_date>=t3.
- where t1.flights_date>=to_date('2015-03-29','yyyy-mm-dd')
-    and t1.flights_date< to_date('2020-05-03','yyyy-mm-dd')
+ where t1.flights_date>=to_date('2018-03-29','yyyy-mm-dd')
+    and t1.flights_date< to_date('2023-05-03','yyyy-mm-dd')
   and t1.flag<>2
   and regexp_like(t2.flights_segment_name,'(Urumqi)|(Karamay)|(Shache)')
 ````
 
+#### 16 passengers bought tickets for more than 2,999 yuan
+
+
+````sql
+select h1.ticketnum,count(1)
+from(
+select t1.traveller_name||t1.codeno,count(1) ticketnum,round(sum(t1.ticket_price),0) ticketprice
+ from dw.fact_order_detail t1
+ join dw.da_flight t2 on t1.segment_head_id=t2.segment_head_id
+ where t1.flights_date>=to_date('2022-01-01','yyyy-mm-dd')
+   and t1.flights_date< to_date('2023-01-01','yyyy-mm-dd')
+   and t1.company_id=0
+   and t1.seats_name is not null
+   and t1.sex=1
+   and t1.nationflag='国内'
+   group by t1.traveller_name||t1.codeno
+   having sum(t1.ticket_price)>=2999
+    )h1
+    group by h1.ticketnum;
+
+````
+
+
+#### 17 booking data
+
+
+>From January to April 2023, by age/gender/number of passengers/flight departure time (0-6, 7-9, 10-12, 12-18, 18-24)/route nature/departure city/destination number of VIP lounges purchased
+
+````sql
+select /*+parallel(4) */
+ to_char(t1.flights_date,'yyyymm'), t4.AGE,decode(t4.GENDER,0,'-',1,'男',2,'女') 性别,t3.ticketnum,
+case when to_char(t2.origin_std,'hh24')>='00' and to_char(t2.origin_std,'hh24')<='06' then '00~06' 
+when to_char(t2.origin_std,'hh24')>='07' and to_char(t2.origin_std,'hh24')<='09' then '07~09' 
+when to_char(t2.origin_std,'hh24')>='10' and to_char(t2.origin_std,'hh24')<='12' then '10~12' 
+when to_char(t2.origin_std,'hh24')>='13' and to_char(t2.origin_std,'hh24')<='18' then '13~18' 
+when to_char(t2.origin_std,'hh24')>='19' and to_char(t2.origin_std,'hh24')<='24' then '19~24'  end,
+t2.nationflag,
+t2.origincity_name,
+t2.destcity_name,
+sum(t1.book_num)
+ from dw.fact_other_order_detail t1
+ join dw.da_flight t2 on t1.segment_head_id=t2.segment_head_id
+ left join (select h1.flights_order_id,h1.segment_head_id,count(1) ticketnum
+                        from dw.fact_order_detail h1
+                        where h1.flights_date>=to_date('2022-01-01','yyyy-mm-dd')
+ and h1.flights_date<to_date('2022-05-01','yyyy-mm-dd')
+ and h1.company_id=0
+ group by h1.flights_order_id,h1.segment_head_id)t3 on t1.flights_order_id=t3.flights_order_id
+ and t1.segment_head_id=t3.segment_head_id
+ left join dw.bi_order_region t4 on t1.flights_order_head_id=t4.flights_order_head_id  
+ where t1.xtype_id=20
+ and t1.flights_date>=to_date('2023-01-01','yyyy-mm-dd')
+ and t1.flights_date<to_date('2023-05-01','yyyy-mm-dd')
+ and t1.company_id=0
+ group by to_char(t1.flights_date,'yyyymm'), t4.AGE,t4.GENDER,t3.ticketnum,
+case when to_char(t2.origin_std,'hh24')>='00' and to_char(t2.origin_std,'hh24')<='06' then '00~06' 
+when to_char(t2.origin_std,'hh24')>='07' and to_char(t2.origin_std,'hh24')<='09' then '07~09' 
+when to_char(t2.origin_std,'hh24')>='10' and to_char(t2.origin_std,'hh24')<='12' then '10~12' 
+when to_char(t2.origin_std,'hh24')>='13' and to_char(t2.origin_std,'hh24')<='18' then '13~18' 
+when to_char(t2.origin_std,'hh24')>='19' and to_char(t2.origin_std,'hh24')<='24' then '19~24'  end,
+t2.nationflag,
+t2.origincity_name,
+t2.destcity_name;
+````
+
+#### 18 National Day travel trend analysis
+
+````sql
+ select /*+parallel(2) */
+flightdate,
+h1.origincity_name,
+       h1.destcity_name,
+       h1.flights_city_name,
+       h1.wf_city,
+       sum(swnum + bgplan),
+       sum(oversale)
+  from (select t1.segment_head_id,
+               to_char(t1.flights_date,'yyyymmdd') flightdate,
+               t2.origincity_name,
+               t2.destcity_name,
+               t2.flights_city_name,
+               replace(replace(t3.wf_segment, '浦东', '上海'),
+                       '虹桥',
+                       '上海') wf_city,
+               t2.bgo_plan - t2.o_plan bgplan,
+               t2.oversale,
+               sum(case
+                     when t1.seats_name not in ('B', 'G', 'G1', 'G2') then
+                      1
+                     else
+                      0
+                   end) swnum
+          from dw.fact_order_detail t1
+          join dw.da_flight t2 on t1.segment_head_id = t2.segment_head_id
+          left join dw.dim_segment_type t3 on t2.h_route_id = t3.h_route_id
+                                          and t2.route_id = t3.route_id
+         where t1.flights_date >= to_date('2020-10-01', 'yyyy-mm-dd')
+           and t1.flights_date <= to_date('2020-10-08', 'yyyy-mm-dd')
+           and t1.nationflag = '国内'
+           and t1.company_id = 0
+         group by t1.segment_head_id,
+         to_char(t1.flights_date,'yyyymmdd'),
+                  t2.origincity_name,
+                  t2.destcity_name,
+                  t2.flights_city_name,
+                  replace(replace(t3.wf_segment, '浦东', '上海'),
+                          '虹桥',
+                          '上海'),
+                  t2.bgo_plan - t2.o_plan ,
+                  t2.oversale) h1
+ group by
+ flightdate, h1.origincity_name,
+          h1.destcity_name,
+          h1.flights_city_name,
+          h1.wf_city
+````
+
+
+#### 19 Data for routes with load factors below 85%
+
+````sql
+
+select dim2.wf_city_name,t1.flight_segment,sum(t1.checkin_mile) 客公里,sum(t1.checkin_s_mile) 座公里
+ from dw.bi_tbl_plf t1
+ left join (
+ select dim1.route_name,dim1.wf_city_name
+  from dw.dim_segment_type dim1
+  group by dim1.route_name,dim1.wf_city_name)dim2  on t1.flight_segment=dim2.route_name
+ where t1.flight_date=to_date('2022-07-17','yyyy-mm-dd')
+ group by dim2.wf_city_name,t1.flight_segment;
+````
 
 
 
+#### 20 Member seat selection data
+
+````sql
+select case when t5.flights_order_head_id is not null then '选座'
+            else '没有选座' end,
+        t2.part,count(distinct t1.flights_order_head_id)
+ from dw.fact_order_detail t1
+  left join dw.da_lyuser t3 on t1.client_id=t3.users_id_fk
+ left join dw.fact_orderhead_trippurpose@to_ods t2 on t1.flights_order_head_id=t2.flights_order_head_id
+ left join dw.bi_order_region t6 on t1.flights_order_head_id=t6.flights_order_head_id
+ left join (select flights_order_head_id,count(1) tkt,sum(t4.book_fee) bookfee   from dw.fact_other_order_detail t4
+ where t4.flights_date>=to_date('2022-01-01','yyyy-mm-dd')
+   and t4.flights_date< to_date('2022-07-17','yyyy-mm-dd')
+   and t4.xtype_id=3
+   group by flights_order_head_id)t5 on t1.flights_Order_head_id=t5.flights_order_head_id
+/*left join (select tb1.flights_order_id,  
+               from dw.fact_order_detail tb1
+               where exists(select 
+                             from dw.bi_order_region tb2
+                             where tb1.flights_order_head_id=tb2.flights_order_head_id
+                             and tb2.age< 12
+                              */
+
+where t1.flights_date>=to_date('2022-01-01','yyyy-mm-dd')
+   and t1.flights_date< to_date('2022-07-17','yyyy-mm-dd')
+   and t1.channel in('网站','手机')
+   and t1.whole_flight like '9C%'
+   and t1.nationflag='国内'
+   and t1.seats_name not in('B','G','G1','G2','O')
+   and t3.cust_id is not null 
+   group by case when t5.flights_order_head_id is not null then '选座'
+            else '没有选座' end,
+        t2.part;
 
 
 
+select case when t5.flights_order_head_id is not null then '选座'
+            else '没有选座' end,
+          case when tp1.part1 ='儿童' then '家庭出行_儿童'
+          when tp1.part1 ='老人' then '家庭出行_老人'
+          else  t2.part end,count(distinct t1.flights_order_head_id)
+ from dw.fact_order_detail t1
+  left join dw.da_lyuser t3 on t1.client_id=t3.users_id_fk
+ left join dw.fact_orderhead_trippurpose@to_ods t2 on t1.flights_order_head_id=t2.flights_order_head_id
+ left join dw.bi_order_region t6 on t1.flights_order_head_id=t6.flights_order_head_id
+ left join (select flights_order_head_id,count(1) tkt,sum(t4.book_fee) bookfee   from dw.fact_other_order_detail t4
+ where t4.flights_date>=to_date('2021-01-01','yyyy-mm-dd')
+   and t4.flights_date< to_date('2021-07-17','yyyy-mm-dd')
+   and t4.xtype_id=3
+   group by flights_order_head_id)t5 on t1.flights_Order_head_id=t5.flights_order_head_id
+left join (
+select tb4.flights_order_id,case when age< 12 then '儿童'
+when age>=60 then '老人' end part1
+
+from(
+select flights_order_id,ntkt,age,row_number()over(partition by  flights_order_id  order by age ) xid
+ from(
+select tb1.flights_order_id,tb2.age,sum(count(1))over(partition by tb1.flights_order_id )  ntkt
+               from dw.fact_order_detail tb1
+               join dw.bi_order_region tb2 on tb1.flights_order_head_id=tb2.flights_order_head_id
+               where tb1.flights_date>=to_date('2021-01-01','yyyy-mm-dd')
+   and tb1.flights_date< to_date('2021-07-17','yyyy-mm-dd')
+   group by tb1.flights_order_id,tb2.age)tb3
+   where (tb3.age< 12 or tb3.age>=60)
+   )tb4
+   where tb4.xid=1
+   and tb4.ntkt>=2)tp1  on t1.flights_order_id=tp1.flights_order_id
+ 
+where t1.flights_date>=to_date('2022-01-01','yyyy-mm-dd')
+   and t1.flights_date< to_date('2022-07-17','yyyy-mm-dd')
+   and t1.channel in('网站','手机')
+   and t1.whole_flight like '9C%'
+   and t1.nationflag='国内'
+   and t1.seats_name not in('B','G','G1','G2','O')
+   and t3.cust_id is not null 
+   group by case when t5.flights_order_head_id is not null then '选座'
+            else '没有选座' end,
+          case when tp1.part1 ='儿童' then '家庭出行_儿童'
+          when tp1.part1 ='老人' then '家庭出行_老人'
+          else  t2.part end;
+
+````
 
 
 
+#### 21 Discount inquiry
 
+````sql
+
+select case when t1.terminal_id=-1 and t1.web_id=0 then 'online'
+       when t1.terminal_id=-1 and t1.web_id>0 then 'OTA'
+       else '其他' end ,
+       t7.youhui_result Discount amount,
+       t7.youhui_id,
+       t7.memo,
+       t4.gate_name,
+       count(1)
+  from cqsale.cq_order@to_air t1
+  join cqsale.cq_order_head@to_air t2 on t1.flights_order_id=t2.flights_order_id
+--Airline ticket product preferential rules
+   join (select t6.flights_order_head_id,max(t7.memo) memo,
+                     max(t6.youhui_id) youhui_id,
+                    sum(YOUHUI_RESULT) youhui_result
+               from cust.cq_order_youhui_detail@to_air t6
+               join cust.cq_youhui_policy_main@to_air t7 on t6.YOUHUI_ID=t7.id
+              where t6.product_type = 0
+              and t7.YH_STYLE!=2
+              group by t6.flights_order_head_id) t7 on t7.flights_order_head_id =
+                                                       t2.flights_order_head_id
+    left join dw.da_flight t3 on t2.segment_head_id=t3.segment_head_id
+    left join stg.p_cq_pay_gate t4 on t1.pay_gate=t4.id
+ where t1.order_date>=trunc(sysdate)-1
+ and  t2.r_order_date>=trunc(sysdate)-1
+ and t2.r_order_date< trunc(sysdate)
+ and t1.terminal_id<0
+ and t1.web_id=0
+ and t2.flag_id in(3,5,40)
+ group by case when t1.terminal_id=-1 and t1.web_id=0 then '线上渠道'
+       when t1.terminal_id=-1 and t1.web_id>0 then 'OTA'
+       else '其他' end ,
+       t7.youhui_result,
+       t7.memo,
+       t7.youhui_id,t4.gate_name;
+````
+
+
+#### 22 Complaint data analysis
+
+````sql
+SELECT 
+    TO_CHAR(cp.createtime, 'yyyymm') AS Month,
+    TRUNC(cp.createtime) AS Creation_Date,
+    CASE 
+        WHEN cp.jobtypecode = 'J' THEN 'Suggestion'
+        WHEN cp.jobtypecode = 'B' THEN 'Praise'
+        WHEN cp.jobtypecode = 'T' THEN 'Complaint'
+        WHEN cp.jobtypecode = 'P' THEN 'Evaluation'
+        ELSE cp.jobtypecode
+    END AS Work_Order_Type,
+    cp.jobnextfrom AS Secondary_Work_Order_Source,
+    CASE 
+        WHEN cp.jobnextfrom IN ('Android', 'IOS', 'Mobile Web', 'Website', 'WeChat', 'LvYi Mall') THEN 'Internal Channel'
+        WHEN cp.jobnextfrom IN ('Civil Aviation Administration', 'Civil Aviation Administration (Website)') THEN 'Civil Aviation Administration'
+        WHEN cp.jobnextfrom = 'Call Center' THEN 'Call Center'
+        WHEN cp.jobnextfrom IN ('Group Complaints Department', 'Passenger Evaluation', 'New Media Platform - Public Opinion', 'Opinion Card', 'Smart Cabin', 'Internal', 'Internal Channel', 'Other') THEN 'Internal Channel'
+        WHEN cp.jobnextfrom IN ('Internal Transfer (Other) Items', 'Internal Transfer (Complaints) Items') THEN 'Internal Transfer'
+        WHEN cp.jobnextfrom = 'Consumer Protection Committee' THEN 'External'
+        WHEN cp.jobnextfrom = 'External' THEN 'External'
+    END AS Complaint_Source_Classification,
+    cp.complaintype1c AS Complaint_Type_Base_Data,
+    CASE 
+        WHEN cp.conetent LIKE '%Package%' THEN 'Package Product Service'
+        ELSE cp.complaintype2c 
+    END AS Complaint_Secondary_Menu_Type,
+    cp.complaintype3c AS Complaint_Tertiary_Menu_Type,
+    cp.passengertype AS Passenger_Type,
+    cp.flightno AS Flight_Number,
+    cp.flightdate AS Flight_Date,
+    cp.airport AS Departure_Arrival_Airport,
+    cp.originairportcode AS Departure_Airport_Code,
+    cp.destairportcode AS Arrival_Airport_Code,
+    cp.conetent AS Complaint_Content,
+    CASE 
+        WHEN cp.conetent LIKE '%Package%' THEN 'Package Product'
+        WHEN cp.conetent LIKE '%Fly As You Wish%' THEN 'Package Product'
+        WHEN cp.conetent LIKE '%COVID%' THEN 'COVID'
+        WHEN cp.conetent LIKE '%Cancellation%' THEN 'Flight Cancellation'
+        WHEN cp.conetent LIKE '%Delay%' THEN 'Flight Delay'
+        WHEN cp.conetent LIKE '%Diversion%' THEN 'Flight Diversion'
+        WHEN cp.conetent LIKE '%Refund%' THEN 'Ticket Refund or Change'
+        WHEN cp.conetent LIKE '%Change%' THEN 'Ticket Refund or Change'
+        WHEN cp.conetent LIKE '%Luggage%' THEN 'Luggage'
+        WHEN cp.complaintype1c LIKE '%Flight Cancellation%' THEN 'Flight Cancellation'
+        WHEN cp.complaintype1c LIKE '%Flight Delay%' THEN 'Flight Delay'
+        WHEN cp.complaintype1c LIKE '%Refund or Change%' THEN 'Ticket Refund or Change'
+        WHEN cp.complaintype1c LIKE '%Luggage%' THEN 'Luggage'
+    END AS Content_Category,
+    cp.sex AS Gender,
+    CASE 
+        WHEN cp.age <= 18 THEN '00~18'
+        WHEN cp.age <= 23 THEN '19~23'
+        WHEN cp.age <= 30 THEN '24~30'
+        WHEN cp.age <= 40 THEN '31~40'
+        WHEN cp.age <= 50 THEN '41~50'
+        WHEN cp.age <= 60 THEN '51~60'
+        ELSE '60+'
+    END AS Age_Group,
+    cp.orderchannel AS Order_Channel,
+    cp.orderchannelchild AS Sub_Order_Channel,
+    cp.leg AS Flight_Leg,
+    CASE 
+        WHEN REGEXP_LIKE(cp.cabin, 'P1|P2|P3|P4|P5|R') THEN SUBSTR(cp.cabin, 1, 2)
+        ELSE SUBSTR(cp.cabin, 1, 1)
+    END AS Cabin_Class,
+    cp.ticketprice AS Ticket_Price,
+    cp.station AS Station,
+    cp.responsibilitydept AS Responsible_Department,
+    CASE 
+        WHEN cp1.flag = 2 THEN 'Flight Cancellation'
+        WHEN (cp2.dep_time - cp1.origin_std) * 24 >= 0.5 AND (cp2.dep_time - cp1.origin_std) * 24 <= 1 THEN 'Delay 0.5~1H'
+        WHEN (cp2.dep_time - cp1.origin_std) * 24 >= 1 AND (cp2.dep_time - cp1.origin_std) * 24 < 3 THEN 'Delay 1~3H'
+        WHEN (cp2.dep_time - cp1.origin_std) * 24 >= 3 THEN 'Delay 3H+'
+    END AS Flight_Status,
+    CASE 
+        WHEN cp3.channel IN ('Website', 'Mobile') AND cp4.users_id IS NOT NULL THEN 'Unauthorized Agent'
+        WHEN cp3.channel IN ('Website', 'Mobile') AND cp3.pay_gate IN (15, 29, 31) THEN 'Unauthorized Agent'
+        WHEN cp3.channel IN ('Website', 'Mobile') THEN 'Online Only'
+        WHEN cp3.channel IN ('OTA', 'Flagship Store') THEN 'OTA'
+        WHEN cp3.flights_order_head_id IS NOT NULL THEN 'B2B'
+        ELSE NULL
+    END AS Channel,
+    DECODE(cp5.gender, '0', '-', 1, 'Male', 2, 'Female') AS Ticket_Gender,
+    CASE 
+        WHEN cp5.age <= 18 THEN '00~18'
+        WHEN cp5.age <= 23 THEN '19~23'
+        WHEN cp5.age <= 30 THEN '24~30'
+        WHEN cp5.age <= 40 THEN '31~40'
+        WHEN cp5.age <= 50 THEN '41~50'
+        WHEN cp5.age <= 60 THEN '51~60'
+        ELSE '60+'
+    END AS Ticket_Age_Group,
+    CASE 
+        WHEN cp6.flights_order_head_id IS NOT NULL THEN 'Refund'
+        WHEN cp7.flights_order_head_id IS NOT NULL THEN 'Change'
+        ELSE 'Normal'
+    END AS Ticket_Status,
+    CASE 
+        WHEN cp6.money_date >= cp6.origin_std THEN 'After Flight Departure'
+        WHEN (cp6.origin_std - cp6.money_date) * 24 >= 0 AND (cp6.origin_std - cp6.money_date) * 24 < 2 THEN '[0,2h)'
+        WHEN (cp6.origin_std - cp6.money_date) * 24 >= 2 AND (cp6.origin_std - cp6.money_date) * 24 < 24 THEN '[2,24h)'
+        WHEN (cp6.origin_std - cp6.money_date) >= 1 AND (cp6.origin_std - cp6.money_date) < 3 THEN '[1D,3D)'
+        WHEN (cp6.origin_std - cp6.money_date) >= 3 AND (cp6.origin_std - cp6.money_date) < 7 THEN '[3D,7D)'
+        WHEN (cp6.origin_std - cp6.money_date) >= 7 THEN '7D+'
+        ELSE '-'
+    END AS Refund_Lead_Time,
+    CASE 
+        WHEN cp7.modify_date >= cp6.origin_std THEN 'After Flight Departure'
+        WHEN (cp6.origin_std - cp7.modify_date) * 24 >= 0 AND (cp6.origin_std - cp7.modify_date) * 24 < 2 THEN '[0,2h)'
+        WHEN (cp6.origin_std - cp7.modify_date) * 24 >= 2 AND (cp6.origin_std - cp7.modify_date) * 24 < 24 THEN '[2,24h)'
+        WHEN (cp6.origin_std - cp7.modify_date) >= 1 AND (cp6.origin_std - cp7.modify_date) < 3 THEN '[1D,3D)'
+        WHEN (cp6.origin_std - cp7.modify_date) >= 3 AND (cp6.origin_std - cp7.modify_date) < 7 THEN '[3D,7D)'
+        WHEN (cp6.origin_std - cp7.modify_date) >= 7 THEN '7D+'
+        ELSE '-'
+    END AS Change_Lead_Time
+FROM 
+    hdb.crm_wo_baseinfo cp
+LEFT JOIN 
+    dw.da_flight cp1 ON cp.flightdate = cp1.flight_date 
+    AND cp.flightno = cp1.flight_no 
+    AND cp.originairportcode || cp.destairportcode = cp1.segment_code
+LEFT JOIN 
+    dw.da_foc_flight cp2 ON cp1.segment_head_id = cp2.segment_head_id
+LEFT JOIN 
+    dw.fact_recent_order_detail cp3 ON cp.orderchannelchild = cp3.flights_order_head_id
+LEFT JOIN 
+    dw.da_restrict_userinfo cp4 ON cp3.client_id = cp4.users_id
+LEFT JOIN 
+    dw.bi_order_region cp5 ON cp.orderchannelchild = cp5.flights_order_head_id
+LEFT JOIN 
+    dw.da_order_drawback cp6 ON cp.orderchannelchild = cp6.flights_order_head_id
+LEFT JOIN 
+    dw.da_order_change cp7 ON cp.orderchannelchild = cp7.flights_order_head_id 
+    AND cp1.segment_head_id = cp7.old_segment_id
+WHERE 
+    TRUNC(cp.createtime) >= TO_DATE('2022-10-01', 'yyyy-mm-dd')
+    AND TRUNC(cp.createtime) < TRUNC(SYSD
+
+
+````
+
+
+#### 23 P2 channel(discount) sales data
+
+select t1.order_day,
+case when t1.channel,count(1)   
+  from dw.fact_order_detail t1
+  join dw.da_flight t2 on t1.segment_head_id = t2.segment_head_id
+  left join dw.da_restrict_userinfo t3 on t1.client_id = t3.users_id
+  left join dw.dim_segment_type t4 on t2.route_Id = t4.route_Id and t2.h_route_id = t4.h_route_id
+ where t2.flag <> 2
+   and t1.order_day >= TRUNC(SYSDATE-30)
+   and t1.order_day <= trunc(sysdate)
+   and t1.seats_name is not NULL
+   and t1.seats_name ='P2'
+   and t1.company_id=0
+   group by t1.order_day,
+case when t1.channel
