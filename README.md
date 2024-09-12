@@ -9,12 +9,14 @@ PLSQL
 
 ## Note Regarding My Solutions
 
-The SQL code shared in this repository is based on real-life scenarios and actual data and has been permitted for public sharing. For information security, the output is not included. Please feel free to reach out with any further questions.
+The SQL code shared in this repository is based on real-life scenarios and actual data and has been permitted for public sharing. For information security, the output is not included.
 
 Anyone who wants to use the code should ask for a permit first.
 
 If you're interested in learning more about airline analysis or data analysis and hoping to communicate, feel free to contact me. :)
 
 Best,
+
 Yvette
+
 yvetteliu231@gmail.com
