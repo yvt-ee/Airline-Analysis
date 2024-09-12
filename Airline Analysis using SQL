@@ -1,1 +1,11 @@
+1. Meal review data
 
+'''sql
+select t2.orderid,t2.userid,t1.remark,t2.created,t1.remark_level,
+decode(t1.source,1,'网站',2,'M网站',3,'IOS',4,'安卓',5,'微信',10,'微信')
+from dw.fact_cms_ch_item_remark t1
+join dw.fact_cms_remark t2 on t1.remarkid=t2.remarkid
+where t1.CHANNEL=0
+and t1.created>=to_date('2019-12-01','yyyy-mm-dd')
+and t1.created< to_date('2020-01-01','yyyy-mm-dd');
+'''
