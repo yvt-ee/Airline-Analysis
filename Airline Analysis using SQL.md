@@ -907,7 +907,7 @@ and t1.flight_date=to_date('2020-04-28','yyyy-mm-dd')
 2. In the past five years, the number of tourists we fly to Xinjiang every year has been separated from winter, spring and summer and autumn. 
 3, the above data need to enter and leave Xinjiang common data.
 
- 
+````sql
 select *
  from dw.fact_order_detail t1
  join dw.da_flight t2 on t1.segment_Head_id=t2.segment_Head_id
@@ -916,7 +916,7 @@ select *
     and t1.flights_date< to_date('2020-05-03','yyyy-mm-dd')
   and t1.flag<>2
   and regexp_like(t2.flights_segment_name,'(Urumqi)|(Karamay)|(Shache)')
-  
+````
 
 
 
