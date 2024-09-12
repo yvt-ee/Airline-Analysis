@@ -291,3 +291,44 @@ when tb1.origin_std=tb1.origin_std2 then 'startsame'
 when  tb1.dest_sta=tb1.dest_sta2 then 'arrivesame'
 else '不同' end,tb1.flightdate2-tb1.flights_date;
 ````
+
+
+#### 5 Cancellation policy exclude irregular flights
+
+>Background:
+>1. What are the popular international routes and destinations during the Spring Festival this year? Are passenger traffic to these countries up or down compared to last year, and how has the year-on-year growth rate changed? 
+>2. Which international routes were hot last Spring Festival, but cooled down this year? Is there anything in the data? * / 
+
+````sql
+select year,flights_segment_name,nationflag,sum(oversale),sum(ticketnum)
+from (
+select  '2020' year,
+t2.flights_segment_name,t1.segment_head_id,t2.oversale,t1.nationflag,
+count(1) ticketnum
+from dw.fact_order_detail t1
+join dw.da_flight t2 on t1.segment_head_id=t2.segment_head_id
+where t1.flights_date>=to_date('2020-01-10','yyyy-mm-dd')
+ and t1.flights_date< to_date('2020-02-19','yyyy-mm-dd')
+ and t1.company_id=0
+ and t2.flag<>2
+ and t1.seats_name is not null
+ and t2.dest_country_id>0
+ group by  t2.flights_segment_name,t1.segment_head_id,t2.oversale,t1.nationflag
+ 
+ union all
+ 
+select  '2019' year, t2.flights_segment_name,t1.segment_head_id,t2.oversale,t1.nationflag,count(1)
+from dw.fact_order_detail t1
+join dw.da_flight t2 on t1.segment_head_id=t2.segment_head_id
+where t1.flights_date>=to_date('2019-01-21','yyyy-mm-dd')
+ and t1.flights_date<= to_date('2019-03-01','yyyy-mm-dd')
+ and t1.company_id=0
+ and t2.flag<>2
+ and t1.order_day< to_date('2019-01-27','yyyy-mm-dd')
+ and t1.seats_name is not null
+ and t2.dest_country_id>0
+ group by  t2.flights_segment_name,t1.segment_head_id,t2.oversale,t1.nationflag)h1
+ group by year,flights_segment_name,nationflag;
+````
+
+
