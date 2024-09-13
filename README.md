@@ -13,7 +13,7 @@ The SQL code shared in this repository is based on real-life scenarios and actua
 
 Anyone who wants to use the code should ask for a permit first.
 
-If you're interested in learning more about airline analysis or data analysis and hoping to communicate, feel free to contact me. :)
+If you're interested in learning more about airline analysis or data analysis, or having any questions feel free to reach out to me. :)
 
 Best,
 
